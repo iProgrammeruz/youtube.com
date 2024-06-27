@@ -71,5 +71,6 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(AbstractHttpConfigurer::disable);
         return http.build();
+
     }
 }
