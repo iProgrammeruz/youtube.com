@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class CategoryEntity {
+@Table(name = "tag")
+public class TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "created_date")

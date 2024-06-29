@@ -63,7 +63,11 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/webjars/**").permitAll()
                     .requestMatchers("/swagger-ui.html").permitAll()
-
+                    .requestMatchers("/category/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/tag/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/category/getCategoryList").permitAll()
+                    .requestMatchers("/tag/create").permitAll()
+                    .requestMatchers("/tag/getTagList").permitAll()
                     .anyRequest()
                     .authenticated();
         });
