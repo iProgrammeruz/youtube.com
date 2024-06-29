@@ -82,4 +82,9 @@ public class ProfileService {
         return profileRepository.findByEmailAndVisibleTrue(email)
                 .orElseThrow(() -> new AppBadException("profile not found"));
     }
+
+    public ProfileDto getProfileDetail() {
+        ProfileEntity profile = SecurityUtil.getProfile();
+        return toDto(profile);
+    }
 }
