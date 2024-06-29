@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileCreateDto {
@@ -19,9 +17,5 @@ public class ProfileCreateDto {
 
     @NotBlank(message = "email is required")
     private String email;
-
-
     private ProfileRole role;
-
-
 }
