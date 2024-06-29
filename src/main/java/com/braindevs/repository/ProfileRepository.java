@@ -10,12 +10,16 @@ import java.util.Optional;
 
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer> {
     Optional<ProfileEntity> findByEmailAndVisibleTrue(String email);
-    Optional<ProfileEntity> findById(Long profileId);
 
     @Transactional
     @Modifying
     @Query("update ProfileEntity set status =?2 where id =?1")
     void updateStatus(Long profileId, ProfileStatus status);
 
-    Optional<ProfileEntity> findByEmailAndPasswordAndVisibleTrue(String email, String password);
+    @Transactional
+    @Modifying
+    @Query("update ProfileEntity set email =?2 where id =?1")
+    void updateEmail(Integer profileId, String email);
+
+    boolean existsByEmail(String email);
 }

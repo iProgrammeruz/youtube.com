@@ -16,7 +16,6 @@ public class EmailSenderService {
     private JavaMailSender javaMailSender;
     @Autowired
     private EmailHistoryService emailHistoryService;
-
     @Value("${spring.mail.username}")
     String fromMailAddress;
 
@@ -46,10 +45,39 @@ public class EmailSenderService {
                 "    </div>";
         String text = String.format(formatText, url);
         send(email, "Complete registration", text);
-        emailHistoryService.save(email, url);           /// create email history
+        emailHistoryService.save(email, url);
     }
 
-    public void send(String toAccount, String subject, String text){
+    public void sendEmailForChange(String token){
+        String email =  JwtUtil.decode(token).getUsername();
+        String url = "http://localhost:8080/profile/verification/" + token;
+        String formatText = "<style>\n" +
+                "    a:link, a:visited {\n" +
+                "        background-color: #f44336;\n" +
+                "        color: white;\n" +
+                "        padding: 14px 25px;\n" +
+                "        text-align: center;\n" +
+                "        text-decoration: none;\n" +
+                "        display: inline-block;\n" +
+                "    }\n" +
+                "\n" +
+                "    a:hover, a:active {\n" +
+                "        background-color: red;\n" +
+                "    }\n" +
+                "</style>\n" +
+                "<div style=\"text-align: center\">\n" +
+                "    <h1>Welcome to YouTube</h1>\n" +
+                "    <br>\n" +
+                "    <p>Please click button  below to complete registration</p>\n" +
+                "    <div style=\"text-align: center\">\n" +
+                "        <a href=\"%s\" target=\"_blank\">This is a link</a>\n" +
+                "    </div>";
+        String text = String.format(formatText, url);
+        send(email, "Complete registration", text);
+        emailHistoryService.save(email, url);
+    }
+
+    public void send(String toAccount, String subject, String text) {
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
             msg.setFrom(fromMailAddress);
