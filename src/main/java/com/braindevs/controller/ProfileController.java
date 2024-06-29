@@ -1,5 +1,7 @@
 package com.braindevs.controller;
 
+import com.braindevs.dto.profile.ProfileDto;
+import com.braindevs.dto.profile.ProfileUpdateDto;
 import com.braindevs.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,12 @@ public class ProfileController {
     @GetMapping("/verification/{token}")
     public ResponseEntity<String> verifyEmail(@PathVariable String token) {
         String response = profileService.verifyEmail(token);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update/detail")
+    public ResponseEntity<ProfileDto> update(@RequestBody ProfileUpdateDto dto) {
+        ProfileDto response = profileService.update(dto);
         return ResponseEntity.ok(response);
     }
 }
