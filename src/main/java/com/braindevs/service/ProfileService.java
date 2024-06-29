@@ -1,12 +1,15 @@
 package com.braindevs.service;
 
 import com.braindevs.dto.JwtDto;
+import com.braindevs.dto.profile.ProfileCreateDto;
+import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.ProfileStatus;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.ProfileRepository;
 import com.braindevs.util.JwtUtil;
 import com.braindevs.util.MD5Util;
+import com.braindevs.util.RandomUtil;
 import com.braindevs.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,5 +60,43 @@ public class ProfileService {
     public ProfileEntity getProfile(String email) {
         return profileRepository.findByEmailAndVisibleTrue(email)
                 .orElseThrow(() -> new AppBadException("profile not found"));
+    }
+
+
+
+
+    public ProfileDto createProfile(ProfileCreateDto dto) {
+        profileRepository.findByEmailAndVisibleTrue(dto.getEmail())
+                .ifPresent(profile -> {
+                    throw new AppBadException("profile already exists");
+                });
+        ProfileEntity profile = new ProfileEntity();
+
+        profile.setName(dto.getName());
+        profile.setEmail(dto.getEmail());
+        profile.setStatus(ProfileStatus.ACTIVE);
+        profile.setRole(dto.getRole());
+        profile.setPassword("12345");
+        profile.setSurname(dto.getSurname());
+        profileRepository.save(profile);
+        return toDto(profile);
+
+    }
+
+    public ProfileDto toDto(ProfileEntity profile) {
+        ProfileDto profileDto = new ProfileDto();
+        profileDto.setId(profile.getId());
+        profileDto.setName(profile.getName());
+        profileDto.setCreatedDate(profile.getCreatedDate());
+        profileDto.setEmail(profile.getEmail());
+//        profileDto.setRole(profile.getRole());
+//        profileDto.setPassword(profile.getPassword());
+        profileDto.setSurname(profile.getSurname());
+        return profileDto;
+    }
+
+    public ProfileDto getProfileDetail() {
+        ProfileEntity profile = SecurityUtil.getProfile();
+        return toDto(profile);
     }
 }
