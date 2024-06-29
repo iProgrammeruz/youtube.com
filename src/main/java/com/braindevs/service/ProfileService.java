@@ -9,7 +9,6 @@ import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.ProfileRepository;
 import com.braindevs.util.JwtUtil;
 import com.braindevs.util.MD5Util;
-import com.braindevs.util.RandomUtil;
 import com.braindevs.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -43,5 +43,4 @@ public class ProfileController {
     public ResponseEntity<ProfileDto> getProfileDetail() {
         return ResponseEntity.ok().body(profileService.getProfileDetail());
     }
-
 }
