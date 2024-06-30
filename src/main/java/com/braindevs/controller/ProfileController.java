@@ -45,4 +45,9 @@ public class ProfileController {
     public ResponseEntity<ProfileDto> getProfileDetail() {
         return ResponseEntity.ok().body(profileService.getProfileDetail());
     }
+    @PostMapping("/admin/createProfile")
+    public ResponseEntity<ProfileDto> createProfile(@Valid @RequestBody ProfileCreateDto profileCreateDto) {
+        return ResponseEntity.ok().body(profileService.createProfile(profileCreateDto));
+    }
+
 }

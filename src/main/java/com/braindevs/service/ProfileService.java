@@ -1,6 +1,7 @@
 package com.braindevs.service;
 
 import com.braindevs.dto.JwtDto;
+import com.braindevs.dto.profile.ProfileCreateDto;
 import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.dto.profile.ProfileUpdateDto;
 import com.braindevs.entity.ProfileEntity;
@@ -86,5 +87,23 @@ public class ProfileService {
     public ProfileDto getProfileDetail() {
         ProfileEntity profile = SecurityUtil.getProfile();
         return toDto(profile);
+    }
+
+    public ProfileDto createProfile(ProfileCreateDto dto) {
+        profileRepository.findByEmailAndVisibleTrue(dto.getEmail())
+                .ifPresent(profile -> {
+                    throw new AppBadException("profile already exists");
+                });
+        ProfileEntity profile = new ProfileEntity();
+
+        profile.setName(dto.getName());
+        profile.setEmail(dto.getEmail());
+        profile.setStatus(ProfileStatus.ACTIVE);
+        profile.setRole(dto.getRole());
+        profile.setPassword("12345");
+        profile.setSurname(dto.getSurname());
+        profileRepository.save(profile);
+        return toDto(profile);
+
     }
 }
