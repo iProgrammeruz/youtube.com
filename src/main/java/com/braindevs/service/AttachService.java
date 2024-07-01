@@ -190,5 +190,7 @@ public class AttachService {
     }
 
 
-
+    public ResponseEntity<Resource> delete(String fileName) {
+        return null;
+    }
 }
