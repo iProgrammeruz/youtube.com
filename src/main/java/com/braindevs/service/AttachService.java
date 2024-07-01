@@ -190,7 +190,12 @@ public class AttachService {
     }
 
 
-    public ResponseEntity<Resource> delete(String fileName) {
-        return null;
+    public void delete(String fileName) {
+        AttachEntity entity = get(fileName);
+        File file = new File("uploads/" + entity.getPath() + "/" + fileName);
+        if (!file.delete()) {
+            throw new AppBadException("file not deleted");
+        }
+        attachRepository.delete(entity);
     }
 }

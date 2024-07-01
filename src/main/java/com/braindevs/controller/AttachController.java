@@ -55,11 +55,9 @@ public class AttachController {
 
     }
 
-    @GetMapping("/delete/{fineName}")
-    public ResponseEntity<Resource> delete(@PathVariable("fineName") String fileName) {
-        return attachService.delete(fileName);
-
+    @DeleteMapping("/delete/{fineName}")
+    public ResponseEntity<String> delete(@PathVariable("fineName") String fileName) {
+         attachService.delete(fileName);
+         return ResponseEntity.ok("Deleted " + fileName);
     }
-
-
 }
