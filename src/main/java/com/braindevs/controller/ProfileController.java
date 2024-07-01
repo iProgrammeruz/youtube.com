@@ -1,6 +1,10 @@
 package com.braindevs.controller;
 
+import com.braindevs.dto.profile.ProfileDto;
+import com.braindevs.dto.profile.ProfileUpdateDto;
+import com.braindevs.dto.profile.ProfileCreateDto;
 import com.braindevs.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,4 +34,20 @@ public class ProfileController {
         String response = profileService.verifyEmail(token);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/update/detail")
+    public ResponseEntity<ProfileDto> update(@RequestBody ProfileUpdateDto dto) {
+        ProfileDto response = profileService.update(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getProfileDetail")
+    public ResponseEntity<ProfileDto> getProfileDetail() {
+        return ResponseEntity.ok().body(profileService.getProfileDetail());
+    }
+    @PostMapping("/admin/createProfile")
+    public ResponseEntity<ProfileDto> createProfile(@Valid @RequestBody ProfileCreateDto profileCreateDto) {
+        return ResponseEntity.ok().body(profileService.createProfile(profileCreateDto));
+    }
+
 }

@@ -69,6 +69,7 @@ public class SecurityConfig {
                     .requestMatchers("/category/getCategoryList").permitAll()
                     .requestMatchers("/tag/create").permitAll()
                     .requestMatchers("/tag/getTagList").permitAll()
+                    .requestMatchers("/profile/admin/**").hasRole("ADMIN")
                     .anyRequest()
                     .authenticated();
         });

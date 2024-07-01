@@ -22,4 +22,6 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     void updateEmail(Integer profileId, String email);
 
     boolean existsByEmail(String email);
+
+
 }

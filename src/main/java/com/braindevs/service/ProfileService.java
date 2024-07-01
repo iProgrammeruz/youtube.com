@@ -1,6 +1,9 @@
 package com.braindevs.service;
 
 import com.braindevs.dto.JwtDto;
+import com.braindevs.dto.profile.ProfileCreateDto;
+import com.braindevs.dto.profile.ProfileDto;
+import com.braindevs.dto.profile.ProfileUpdateDto;
 import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.ProfileStatus;
 import com.braindevs.exp.AppBadException;
@@ -54,8 +57,53 @@ public class ProfileService {
         return "email changed successfully";
     }
 
+    public ProfileDto update(ProfileUpdateDto dto) {
+        ProfileEntity profile = SecurityUtil.getProfile();
+
+        if (profile.getStatus().equals(ProfileStatus.BLOCK)) {
+            throw new AppBadException("profile status is block");
+        }
+
+        profile.setName(dto.getName());
+        profile.setSurname(dto.getSurname());
+        ProfileEntity saved = profileRepository.save(profile);
+        return toDto(saved);
+    }
+
+    private ProfileDto toDto(ProfileEntity entity) {
+        ProfileDto dto = new ProfileDto();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setSurname(entity.getSurname());
+        dto.setEmail(entity.getEmail());
+        return dto;
+    }
+
     public ProfileEntity getProfile(String email) {
         return profileRepository.findByEmailAndVisibleTrue(email)
                 .orElseThrow(() -> new AppBadException("profile not found"));
+    }
+
+    public ProfileDto getProfileDetail() {
+        ProfileEntity profile = SecurityUtil.getProfile();
+        return toDto(profile);
+    }
+
+    public ProfileDto createProfile(ProfileCreateDto dto) {
+        profileRepository.findByEmailAndVisibleTrue(dto.getEmail())
+                .ifPresent(profile -> {
+                    throw new AppBadException("profile already exists");
+                });
+        ProfileEntity profile = new ProfileEntity();
+
+        profile.setName(dto.getName());
+        profile.setEmail(dto.getEmail());
+        profile.setStatus(ProfileStatus.ACTIVE);
+        profile.setRole(dto.getRole());
+        profile.setPassword("12345");
+        profile.setSurname(dto.getSurname());
+        profileRepository.save(profile);
+        return toDto(profile);
+
     }
 }
