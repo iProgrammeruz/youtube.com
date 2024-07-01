@@ -52,6 +52,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/attach/**").permitAll()
                     // swagger
                     .requestMatchers("/v2/api-docs").permitAll()
                     .requestMatchers("/v3/api-docs").permitAll()
