@@ -1,5 +1,5 @@
 package com.braindevs.enums;
 
-public enum ProfileStatus {
+public enum Status {
     ACTIVE, BLOCK
 }

@@ -1,6 +1,6 @@
 package com.braindevs.repository;
 import com.braindevs.entity.ProfileEntity;
-import com.braindevs.enums.ProfileStatus;
+import com.braindevs.enums.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +14,7 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     @Transactional
     @Modifying
     @Query("update ProfileEntity set status =?2 where id =?1")
-    void updateStatus(Long profileId, ProfileStatus status);
+    void updateStatus(Long profileId, Status status);
 
     @Transactional
     @Modifying

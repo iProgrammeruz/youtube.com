@@ -1,7 +1,7 @@
 package com.braindevs.config;
 
 import com.braindevs.entity.ProfileEntity;
-import com.braindevs.enums.ProfileStatus;
+import com.braindevs.enums.Status;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +41,7 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return profile.getStatus().equals(ProfileStatus.ACTIVE);
+        return profile.getStatus().equals(Status.ACTIVE);
     }
 
     @Override

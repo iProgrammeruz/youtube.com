@@ -5,7 +5,7 @@ import com.braindevs.dto.profile.ProfileCreateDto;
 import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.dto.profile.ProfileUpdateDto;
 import com.braindevs.entity.ProfileEntity;
-import com.braindevs.enums.ProfileStatus;
+import com.braindevs.enums.Status;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.ProfileRepository;
 import com.braindevs.util.JwtUtil;
@@ -34,7 +34,7 @@ public class ProfileService {
     public String changeEmail(String newEmail) {
         ProfileEntity profile = SecurityUtil.getProfile();
 
-        if (profile.getStatus().equals(ProfileStatus.BLOCK)) {
+        if (profile.getStatus().equals(Status.BLOCK)) {
             throw new AppBadException("profile status is block");
         }
         if (profile.getEmail().equals(newEmail) || profileRepository.existsByEmail(newEmail)) {
@@ -60,7 +60,7 @@ public class ProfileService {
     public ProfileDto update(ProfileUpdateDto dto) {
         ProfileEntity profile = SecurityUtil.getProfile();
 
-        if (profile.getStatus().equals(ProfileStatus.BLOCK)) {
+        if (profile.getStatus().equals(Status.BLOCK)) {
             throw new AppBadException("profile status is block");
         }
 
@@ -98,7 +98,7 @@ public class ProfileService {
 
         profile.setName(dto.getName());
         profile.setEmail(dto.getEmail());
-        profile.setStatus(ProfileStatus.ACTIVE);
+        profile.setStatus(Status.ACTIVE);
         profile.setRole(dto.getRole());
         profile.setPassword("12345");
         profile.setSurname(dto.getSurname());

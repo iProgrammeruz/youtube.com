@@ -1,7 +1,7 @@
 package com.braindevs.entity;
 
 import com.braindevs.enums.ProfileRole;
-import com.braindevs.enums.ProfileStatus;
+import com.braindevs.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class ProfileEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private ProfileStatus status;
+    private Status status;
 
     @Column(name = "visible")
     private Boolean visible = Boolean.TRUE;

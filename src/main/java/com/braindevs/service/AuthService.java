@@ -6,7 +6,7 @@ import com.braindevs.dto.profile.ProfileLoginDto;
 import com.braindevs.dto.profile.ProfileRegistrationDto;
 import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.ProfileRole;
-import com.braindevs.enums.ProfileStatus;
+import com.braindevs.enums.Status;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.ProfileRepository;
 import com.braindevs.util.JwtUtil;
@@ -35,7 +35,7 @@ public class AuthService {
         entity.setEmail(dto.getEmail());
         entity.setPassword(MD5Util.getMd5(dto.getPassword()));
         entity.setRole(ProfileRole.ROLE_USER);
-        entity.setStatus(ProfileStatus.BLOCK);
+        entity.setStatus(Status.BLOCK);
         ProfileEntity saved = profileRepository.save(entity);
 
         String token = JwtUtil.generateToken(saved.getId(), saved.getEmail(), saved.getRole());
@@ -50,11 +50,11 @@ public class AuthService {
 
         emailHistoryService.isNotExpiredEmail(profile.getEmail());
 
-        if (!profile.getVisible() || !profile.getStatus().equals(ProfileStatus.BLOCK)) {
+        if (!profile.getVisible() || !profile.getStatus().equals(Status.BLOCK)) {
             throw new AppBadException("Registration not completed");
         }
 
-        profileRepository.updateStatus(profile.getId(), ProfileStatus.ACTIVE);
+        profileRepository.updateStatus(profile.getId(), Status.ACTIVE);
         return "registration finished successfully ";
     }
 
@@ -66,7 +66,7 @@ public class AuthService {
             throw new AppBadException("Wrong password");
         }
 
-        if (!profile.getStatus().equals(ProfileStatus.ACTIVE)) {
+        if (!profile.getStatus().equals(Status.ACTIVE)) {
             throw new AppBadException("status not active");
         }
         ProfileDto response = new ProfileDto();
