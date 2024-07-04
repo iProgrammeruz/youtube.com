@@ -1,2 +1,4 @@
 /src/main/resources/application-local.properties
 /talablar.txt
+/.idea/
+/target/
