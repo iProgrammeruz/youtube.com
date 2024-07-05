@@ -19,7 +19,7 @@ public class PlayListEntity {
     private String chanelId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chanel_id", insertable = false, updatable = false)
-    private ChanelEntity chanel;
+    private ChannelEntity chanel;
 
     @Column(name = "name")
     private String name;

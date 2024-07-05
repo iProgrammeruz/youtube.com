@@ -1,6 +1,7 @@
-package com.braindevs.dto.chanel;
+package com.braindevs.dto.channel;
 
-import com.braindevs.dto.AttachDto;
+
+import com.braindevs.dto.attach.AttachDto;
 import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.enums.Status;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChanelDto {
+public class ChannelDto {
     private String id;
     private String name;
     private String description;

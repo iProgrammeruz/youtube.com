@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface VideoRepository extends CrudRepository<String, VideoEntity> {
+public interface VideoRepository extends CrudRepository<VideoEntity, String> {
 
 
 

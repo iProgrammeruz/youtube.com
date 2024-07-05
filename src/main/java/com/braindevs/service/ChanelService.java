@@ -1,9 +1,9 @@
 package com.braindevs.service;
 
-import com.braindevs.dto.chanel.ChanelCreateDto;
-import com.braindevs.dto.chanel.ChanelDto;
-import com.braindevs.dto.chanel.ChanelUpdateDto;
-import com.braindevs.entity.ChanelEntity;
+import com.braindevs.dto.channel.ChannelCreateDto;
+import com.braindevs.dto.channel.ChannelDto;
+import com.braindevs.dto.channel.ChannelUpdateDto;
+import com.braindevs.entity.ChannelEntity;
 import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.ProfileRole;
 import com.braindevs.enums.Status;
@@ -25,31 +25,31 @@ public class ChanelService {
     private final ChanelRepository chanelRepository;
     private final AttachService attachService;
 
-    public ChanelDto create(ChanelCreateDto dto) {
-        ChanelEntity entity = toEntity(dto);
-        ChanelEntity saved = chanelRepository.save(entity);
+    public ChannelDto create(ChannelCreateDto dto) {
+        ChannelEntity entity = toEntity(dto);
+        ChannelEntity saved = chanelRepository.save(entity);
         return toDto(saved);
     }
 
-    public ChanelDto update(String chanelId, ChanelUpdateDto dto) {
+    public ChannelDto update(String chanelId, ChannelUpdateDto dto) {
         isOwner(chanelId);     // check current user is OWNER this channel
 
-        ChanelEntity chanelEntity = get(chanelId);
+        ChannelEntity channelEntity = get(chanelId);
         if (dto.getName() != null) {
-            chanelEntity.setName(dto.getName());
+            channelEntity.setName(dto.getName());
         }
         if (dto.getDescription() != null) {
-            chanelEntity.setDescription(dto.getDescription());
+            channelEntity.setDescription(dto.getDescription());
         }
-        ChanelEntity saved = chanelRepository.save(chanelEntity);
+        ChannelEntity saved = chanelRepository.save(channelEntity);
         return toDto(saved);
     }
 
     public void updatePhoto(String chanelId, String newPhotoId) {
         isOwner(chanelId);      // check current user is OWNER this channel
 
-        ChanelEntity chanelEntity = get(chanelId);
-        String oldPhotoId = chanelEntity.getPhotoId();
+        ChannelEntity channelEntity = get(chanelId);
+        String oldPhotoId = channelEntity.getPhotoId();
         chanelRepository.updatePhotoId(newPhotoId, chanelId);
 
         if (oldPhotoId != null) {
@@ -60,8 +60,8 @@ public class ChanelService {
     public void updateBanner(String chanelId, String newBannerId) {
         isOwner(chanelId);      // check current user is OWNER this channel
 
-        ChanelEntity chanelEntity = get(chanelId);
-        String oldBannerId = chanelEntity.getBannerId();
+        ChannelEntity channelEntity = get(chanelId);
+        String oldBannerId = channelEntity.getBannerId();
         chanelRepository.updateBannerId(newBannerId, chanelId);
 
         if (oldBannerId != null) {
@@ -69,10 +69,10 @@ public class ChanelService {
         }
     }
 
-    public Page<ChanelDto> getAll(int pageNumber, int pageSize) {
+    public Page<ChannelDto> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ChanelEntity> entityPage = chanelRepository.findAllBy(pageable);
-        List<ChanelDto> list = entityPage.getContent()
+        Page<ChannelEntity> entityPage = chanelRepository.findAllBy(pageable);
+        List<ChannelDto> list = entityPage.getContent()
                 .stream()
                 .map(this::toDto)
                 .toList();
@@ -85,7 +85,7 @@ public class ChanelService {
         chanelRepository.updateStatus(status, chanelId);
     }
 
-    public List<ChanelDto> getUserChanels() {
+    public List<ChannelDto> getUserChanels() {
         Long profileId = SecurityUtil.getProfileId();
         return chanelRepository.findAllByProfileId(profileId)
                 .stream()
@@ -93,24 +93,24 @@ public class ChanelService {
                 .toList();
     }
 
-    public ChanelDto getChanelById(String chanelId) {
-        ChanelEntity entity = get(chanelId);
+    public ChannelDto getChanelById(String chanelId) {
+        ChannelEntity entity = get(chanelId);
         return toDto(entity);
     }
 
-    private ChanelEntity toEntity(ChanelCreateDto dto) {
-        ChanelEntity chanelEntity = new ChanelEntity();
-        chanelEntity.setName(dto.getName());
-        chanelEntity.setDescription(dto.getDescription());
-        chanelEntity.setStatus(Status.ACTIVE);
-        chanelEntity.setBannerId(dto.getBannerId());
-        chanelEntity.setPhotoId(dto.getPhotoId());
-        chanelEntity.setProfileId(SecurityUtil.getProfileId());
-        return chanelEntity;
+    private ChannelEntity toEntity(ChannelCreateDto dto) {
+        ChannelEntity channelEntity = new ChannelEntity();
+        channelEntity.setName(dto.getName());
+        channelEntity.setDescription(dto.getDescription());
+        channelEntity.setStatus(Status.ACTIVE);
+        channelEntity.setBannerId(dto.getBannerId());
+        channelEntity.setPhotoId(dto.getPhotoId());
+        channelEntity.setProfileId(SecurityUtil.getProfileId());
+        return channelEntity;
     }
 
-    private ChanelDto toDto(ChanelEntity entity) {
-        ChanelDto dto = new ChanelDto();
+    private ChannelDto toDto(ChannelEntity entity) {
+        ChannelDto dto = new ChannelDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
@@ -122,31 +122,31 @@ public class ChanelService {
         return dto;
     }
 
-    public ChanelEntity get(String chanelId) {
+    public ChannelEntity get(String chanelId) {
         return chanelRepository.findById(chanelId)
                 .orElseThrow(() -> new RuntimeException("Chanel not found"));
     }
 
     private void isOwner(String chanelId) {
         Long profileId = SecurityUtil.getProfileId();
-        ChanelEntity chanelEntity = get(chanelId);
-        if (!chanelEntity.getStatus().equals(Status.ACTIVE)) {
+        ChannelEntity channelEntity = get(chanelId);
+        if (!channelEntity.getStatus().equals(Status.ACTIVE)) {
             throw new AppBadException("chanel not active");
         }
 
-        if (!chanelEntity.getProfileId().equals(profileId)) {
+        if (!channelEntity.getProfileId().equals(profileId)) {
             throw new AppBadException("You do not have permission to update");
         }
     }
 
     private void isAdminOrOwner(String chanelId) {
         ProfileEntity profile = SecurityUtil.getProfile();
-        ChanelEntity chanelEntity = get(chanelId);
-        if (!chanelEntity.getStatus().equals(Status.ACTIVE)) {
+        ChannelEntity channelEntity = get(chanelId);
+        if (!channelEntity.getStatus().equals(Status.ACTIVE)) {
             throw new AppBadException("chanel not active");
         }
 
-        if (!chanelEntity.getProfileId().equals(profile.getId())
+        if (!channelEntity.getProfileId().equals(profile.getId())
                 || !profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
             throw new AppBadException("You do not have permission to change");
         }

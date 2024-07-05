@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "chanel")
-public class ChanelEntity {
+@Table(name = "channel")
+public class ChannelEntity {
     @Id
     @UuidGenerator
     private String id;

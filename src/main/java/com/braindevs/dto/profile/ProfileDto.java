@@ -1,6 +1,7 @@
 package com.braindevs.dto.profile;
 
-import com.braindevs.dto.AttachDto;
+
+import com.braindevs.dto.attach.AttachDto;
 import com.braindevs.enums.ProfileRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

@@ -20,7 +20,7 @@ public class VideoEntity {
     type(video,short),view_count,shared_count,description,channel_id,(like_count,dislike_count),
 
     view_count -> Okala view_count buyerda ham bo'lsin. Alohida Table ham bo'lsin.
-            category_id -> bitta video bitta category bo'lsin.*/
+    category_id -> bitta video bitta category bo'lsin.*/
 
     @Id
     @GeneratedValue(generator = "uuid-hibernate-generator")
@@ -74,9 +74,9 @@ public class VideoEntity {
 
     @Column(name = "channel_id")
     private String channelId;
-    /*@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id", insertable = false, updatable = false)
-    private ChannelEntity channel;*/
+    private ChannelEntity channel;
 
     @Column(name = "like_count")
     private Integer likeCount = 0; //TODO trigger at video_like entity

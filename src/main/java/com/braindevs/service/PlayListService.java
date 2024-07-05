@@ -1,7 +1,7 @@
 package com.braindevs.service;
 
-import com.braindevs.dto.AttachDto;
-import com.braindevs.dto.chanel.ChanelDto;
+import com.braindevs.dto.attach.AttachDto;
+import com.braindevs.dto.channel.ChannelDto;
 import com.braindevs.dto.playList.PlayListCreateDto;
 import com.braindevs.dto.playList.PlayListDto;
 import com.braindevs.dto.playList.PlayListUpdateDto;
@@ -109,7 +109,7 @@ public class PlayListService {
         ///////////// video list
 
         // create channel
-        ChanelDto chanel = new ChanelDto();
+        ChannelDto chanel = new ChannelDto();
         chanel.setId(entity.getChanelId());
         chanel.setName(entity.getName());
         dto.setChanel(chanel);
@@ -126,14 +126,14 @@ public class PlayListService {
         dto.setCreatedDate(entity.getCreatedDate());
 
         // create channel
-        ChanelDto chanel = new ChanelDto();
-        chanel.setId(entity.getChanelId());
-        chanel.setName(entity.getName());
+        ChannelDto channel = new ChannelDto();
+        channel.setId(entity.getChanelId());
+        channel.setName(entity.getName());
         // create chanel photo
-        AttachDto chanelAttach = attachService.getDTOWithURL(entity.getChanel().getPhotoId());
-        chanel.setPhoto(chanelAttach);
+        AttachDto channelAttach = attachService.getDTOWithURL(entity.getChanel().getPhotoId());
+        channel.setPhoto(channelAttach);
 
-        dto.setChanel(chanel);
+        dto.setChanel(channel);
 
         // create profile
         ProfileDto profile = new ProfileDto();

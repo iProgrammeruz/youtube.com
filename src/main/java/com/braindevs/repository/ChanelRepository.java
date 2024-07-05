@@ -1,6 +1,6 @@
 package com.braindevs.repository;
 
-import com.braindevs.entity.ChanelEntity;
+import com.braindevs.entity.ChannelEntity;
 import com.braindevs.enums.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -12,26 +12,26 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface ChanelRepository extends CrudRepository<ChanelEntity,String> {
+public interface ChanelRepository extends CrudRepository<ChannelEntity,String> {
     @Transactional
     @Modifying
-    @Query("update ChanelEntity set photoId = ?1 where id = ?2")
+    @Query("update ChannelEntity set photoId = ?1 where id = ?2")
     void updatePhotoId(String photoId ,String chanelId);
 
     @Transactional
     @Modifying
-    @Query("update ChanelEntity set bannerId = ?1 where id = ?2")
+    @Query("update ChannelEntity set bannerId = ?1 where id = ?2")
     void updateBannerId(String bannerId ,String chanelId);
 
     @Transactional
     @Modifying
-    @Query("update ChanelEntity set status = ?1 where id = ?2")
+    @Query("update ChannelEntity set status = ?1 where id = ?2")
     void updateStatus(Status status , String chanelId);
 
-    Page<ChanelEntity> findAllBy(Pageable pageable);
+    Page<ChannelEntity> findAllBy(Pageable pageable);
 
-    List<ChanelEntity> findAllByProfileId(Long profileId);
+    List<ChannelEntity> findAllByProfileId(Long profileId);
 
-    Optional<ChanelEntity> findByProfileId(Long profileId);
+    Optional<ChannelEntity> findByProfileId(Long profileId);
 
 }
