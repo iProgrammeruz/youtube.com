@@ -5,7 +5,6 @@ import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.dto.profile.ProfileLoginDto;
 import com.braindevs.dto.profile.ProfileRegistrationDto;
 import com.braindevs.entity.ProfileEntity;
-import com.braindevs.enums.LanguageEnum;
 import com.braindevs.enums.ProfileRole;
 import com.braindevs.enums.ProfileStatus;
 import com.braindevs.exp.AppBadException;
@@ -13,10 +12,8 @@ import com.braindevs.repository.ProfileRepository;
 import com.braindevs.util.JwtUtil;
 import com.braindevs.util.MD5Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -25,13 +22,11 @@ public class AuthService {
     private final ProfileRepository profileRepository;
     private final EmailSenderService emailSenderService;
     private final EmailHistoryService emailHistoryService;
-    private final ResourceBundleMessageSource rbms;
 
-    public String registration(ProfileRegistrationDto dto, LanguageEnum lang) {
+    public String registration(ProfileRegistrationDto dto) {
         Optional<ProfileEntity> optional = profileRepository.findByEmailAndVisibleTrue(dto.getEmail());
         if (optional.isPresent()) {
-            String msg = rbms.getMessage("email.exists", null, new Locale(lang.name()));
-            throw new AppBadException(msg);
+            throw new AppBadException("Email already exists");
         }
 
         ProfileEntity entity = new ProfileEntity();
@@ -45,7 +40,7 @@ public class AuthService {
 
         String token = JwtUtil.generateToken(saved.getId(), saved.getEmail(), saved.getRole());
         emailSenderService.sendEmail(token);
-        return rbms.getMessage("email.registration.verify", null, new Locale(lang.name()));
+        return "To complete your registration please verify your email.";
     }
 
     public String verification(String token) {
@@ -81,7 +76,7 @@ public class AuthService {
         response.setEmail(profile.getEmail());
         response.setRole(profile.getRole());
         response.setCreatedDate(profile.getCreatedDate());
-        response.setJwt(JwtUtil.generateToken(profile.getId(), profile.getEmail(), profile.getRole()));
+        response.setJwt(JwtUtil.generateToken(profile.getId(),profile.getEmail(), profile.getRole()));
         return response;
     }
 }

@@ -188,6 +188,14 @@ public class AttachService {
             throw new AppBadException("Attach not found");
         });
     }
+    public AttachDto getDTOWithURL(String attachId) {
+        AttachEntity attach = attachRepository.findById(attachId)
+                .orElseThrow(() -> new AppBadException("Attach not found"));
+        AttachDto dto = new AttachDto();
+        dto.setId(attachId);
+        dto.setUrl(serverUrl + "/" + "uploads/"+ attach.getPath() + "/" + attachId);
+        return dto;
+    }
 
 
     public void delete(String fileName) {

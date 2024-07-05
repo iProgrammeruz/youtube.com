@@ -1,10 +1,8 @@
 package com.braindevs.controller;
 
-import com.braindevs.config.ResourseBundleConfig;
 import com.braindevs.dto.profile.ProfileDto;
 import com.braindevs.dto.profile.ProfileLoginDto;
 import com.braindevs.dto.profile.ProfileRegistrationDto;
-import com.braindevs.enums.LanguageEnum;
 import com.braindevs.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final ResourseBundleConfig resourseBundleConfig;
 
     @PostMapping("/registr")
-    public ResponseEntity<String> registration(@Valid @RequestBody ProfileRegistrationDto dto,
-                                               @RequestHeader(value = "Accept-Language", defaultValue = "UZ") LanguageEnum lang) {
-        String response = authService.registration(dto, lang);
+    public ResponseEntity<String> registration(@Valid @RequestBody ProfileRegistrationDto dto) {
+        String response = authService.registration(dto);
         return ResponseEntity.ok(response);
     }
 
