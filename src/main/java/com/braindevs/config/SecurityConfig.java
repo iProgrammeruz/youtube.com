@@ -70,6 +70,9 @@ public class SecurityConfig {
                     .requestMatchers("/tag/create").permitAll()
                     .requestMatchers("/tag/getTagList").permitAll()
                     .requestMatchers("/profile/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/chanel/v1/**").hasRole("USER")
+                    .requestMatchers("/chanel/getAll").hasRole("ADMIN")
+                    .requestMatchers("/chanel/v2/**").hasAnyRole("USER","ADMIN")
                     .anyRequest()
                     .authenticated();
         });
