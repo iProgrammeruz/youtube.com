@@ -1,4 +1,4 @@
-package com.braindevs.dto;
+package com.braindevs.dto.attach;
 
 import lombok.Getter;
 import lombok.Setter;

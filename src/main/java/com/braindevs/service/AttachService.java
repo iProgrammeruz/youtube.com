@@ -1,6 +1,6 @@
 package com.braindevs.service;
 
-import com.braindevs.dto.AttachDto;
+import com.braindevs.dto.attach.AttachDto;
 import com.braindevs.entity.AttachEntity;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.AttachRepository;

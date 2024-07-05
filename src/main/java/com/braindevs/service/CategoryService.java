@@ -4,18 +4,17 @@ import com.braindevs.dto.category.CategoryDto;
 import com.braindevs.entity.CategoryEntity;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 
+@RequiredArgsConstructor
+@Service
 public class CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public CategoryDto create(CategoryDto category) {
         CategoryEntity categoryEntity = new CategoryEntity();
