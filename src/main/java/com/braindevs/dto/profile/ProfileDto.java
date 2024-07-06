@@ -1,5 +1,6 @@
 package com.braindevs.dto.profile;
 
+import com.braindevs.dto.AttachDto;
 import com.braindevs.enums.ProfileRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class ProfileDto {
     private String email;
     private String password;
     private String mainPhotoUrl;
+    private AttachDto attach;
     private LocalDateTime createdDate;
     private ProfileRole role;
     private String jwt;
