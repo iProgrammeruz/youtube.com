@@ -1,6 +1,7 @@
 package com.braindevs.service;
 
 import com.braindevs.dto.attach.AttachDto;
+import com.braindevs.dto.attach.AttachShortInfoDto;
 import com.braindevs.entity.AttachEntity;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.AttachRepository;
@@ -31,7 +32,7 @@ import java.util.UUID;
 public class AttachService {
 
     private final AttachRepository attachRepository;
-    @Value("${server.url}")
+    @Value("${attach.open.url}")
     private String serverUrl;
 
     //Save to system
@@ -169,7 +170,7 @@ public class AttachService {
         }
     }
 
-    
+
     public AttachDto toDTO(AttachEntity entity) {
         AttachDto dto = new AttachDto();
         dto.setId(entity.getId());
@@ -188,12 +189,13 @@ public class AttachService {
             throw new AppBadException("Attach not found");
         });
     }
+
     public AttachDto getDTOWithURL(String attachId) {
         AttachEntity attach = attachRepository.findById(attachId)
                 .orElseThrow(() -> new AppBadException("Attach not found"));
         AttachDto dto = new AttachDto();
         dto.setId(attachId);
-        dto.setUrl(serverUrl + "/" + "uploads/"+ attach.getPath() + "/" + attachId);
+        dto.setUrl(serverUrl + "/" + "uploads/" + attach.getPath() + "/" + attachId);
         return dto;
     }
 
@@ -205,5 +207,20 @@ public class AttachService {
             throw new AppBadException("file not deleted");
         }
         attachRepository.delete(entity);
+    }
+
+    public String asUrlString(String attachId) {
+        if (attachId == null) {
+            return null;
+        }
+        // return http://localhost:8080/attach/open_general/fsdseafrwavae.jpg
+        return serverUrl + attachId;
+    }
+
+    public AttachShortInfoDto toDto(String attachId) {
+        AttachShortInfoDto attachShortInfoDto = new AttachShortInfoDto();
+        attachShortInfoDto.setId(attachId);
+        attachShortInfoDto.setUrl(serverUrl + attachId);
+        return attachShortInfoDto;
     }
 }

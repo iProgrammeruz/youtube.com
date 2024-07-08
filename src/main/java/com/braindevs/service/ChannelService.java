@@ -8,7 +8,7 @@ import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.ProfileRole;
 import com.braindevs.enums.Status;
 import com.braindevs.exp.AppBadException;
-import com.braindevs.repository.ChanelRepository;
+import com.braindevs.repository.ChannelRepository;
 import com.braindevs.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,13 +21,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChanelService {
-    private final ChanelRepository chanelRepository;
+public class ChannelService {
+    private final ChannelRepository channelRepository;
     private final AttachService attachService;
 
     public ChannelDto create(ChannelCreateDto dto) {
         ChannelEntity entity = toEntity(dto);
-        ChannelEntity saved = chanelRepository.save(entity);
+        ChannelEntity saved = channelRepository.save(entity);
         return toDto(saved);
     }
 
@@ -41,7 +41,7 @@ public class ChanelService {
         if (dto.getDescription() != null) {
             channelEntity.setDescription(dto.getDescription());
         }
-        ChannelEntity saved = chanelRepository.save(channelEntity);
+        ChannelEntity saved = channelRepository.save(channelEntity);
         return toDto(saved);
     }
 
@@ -50,7 +50,7 @@ public class ChanelService {
 
         ChannelEntity channelEntity = get(chanelId);
         String oldPhotoId = channelEntity.getPhotoId();
-        chanelRepository.updatePhotoId(newPhotoId, chanelId);
+        channelRepository.updatePhotoId(newPhotoId, chanelId);
 
         if (oldPhotoId != null) {
             attachService.delete(oldPhotoId);
@@ -62,7 +62,7 @@ public class ChanelService {
 
         ChannelEntity channelEntity = get(chanelId);
         String oldBannerId = channelEntity.getBannerId();
-        chanelRepository.updateBannerId(newBannerId, chanelId);
+        channelRepository.updateBannerId(newBannerId, chanelId);
 
         if (oldBannerId != null) {
             attachService.delete(oldBannerId);
@@ -71,7 +71,7 @@ public class ChanelService {
 
     public Page<ChannelDto> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ChannelEntity> entityPage = chanelRepository.findAllBy(pageable);
+        Page<ChannelEntity> entityPage = channelRepository.findAllBy(pageable);
         List<ChannelDto> list = entityPage.getContent()
                 .stream()
                 .map(this::toDto)
@@ -82,12 +82,12 @@ public class ChanelService {
 
     public void changeStatus(String chanelId, Status status) {
         isAdminOrOwner(chanelId);       // check current user is OWNER this channel or ADMIN
-        chanelRepository.updateStatus(status, chanelId);
+        channelRepository.updateStatus(status, chanelId);
     }
 
     public List<ChannelDto> getUserChanels() {
         Long profileId = SecurityUtil.getProfileId();
-        return chanelRepository.findAllByProfileId(profileId)
+        return channelRepository.findAllByProfileId(profileId)
                 .stream()
                 .map(this::toDto)
                 .toList();
@@ -123,7 +123,7 @@ public class ChanelService {
     }
 
     public ChannelEntity get(String chanelId) {
-        return chanelRepository.findById(chanelId)
+        return channelRepository.findById(chanelId)
                 .orElseThrow(() -> new RuntimeException("Chanel not found"));
     }
 

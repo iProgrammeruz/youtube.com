@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface ChanelRepository extends CrudRepository<ChannelEntity,String> {
+public interface ChannelRepository extends CrudRepository<ChannelEntity,String> {
     @Transactional
     @Modifying
     @Query("update ChannelEntity set photoId = ?1 where id = ?2")
