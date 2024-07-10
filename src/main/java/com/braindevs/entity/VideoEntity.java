@@ -3,25 +3,15 @@ package com.braindevs.entity;
 import com.braindevs.enums.VideoStatus;
 import com.braindevs.enums.VideoType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
-
-
-
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "video")
 public class VideoEntity {
-    /*id(uuid), preview_attach_id,title,category_id,attach_id,created_date,published_date,status(private,public),
-    type(video,short),view_count,shared_count,description,channel_id,(like_count,dislike_count),
-
-    view_count -> Okala view_count buyerda ham bo'lsin. Alohida Table ham bo'lsin.
-    category_id -> bitta video bitta category bo'lsin.*/
-
     @Id
     @GeneratedValue(generator = "uuid-hibernate-generator")
     @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
@@ -29,13 +19,13 @@ public class VideoEntity {
 
     @Column(name = "preview_attach_id")
     private String previewAttachId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "preview_attach_id", insertable = false, updatable = false)
     private AttachEntity previewAttach;
 
     @Column(name = "attach_id")
     private String attachId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attach_id", insertable = false, updatable = false)
     private AttachEntity attach;
 
@@ -57,7 +47,7 @@ public class VideoEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private VideoStatus status;
+    private VideoStatus status = VideoStatus.PRIVATE;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -83,8 +73,6 @@ public class VideoEntity {
 
     @Column(name = "dislike_count")
     private Integer dislikeCount = 0;
-
-
 
 
 
