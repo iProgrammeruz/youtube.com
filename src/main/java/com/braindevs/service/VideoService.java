@@ -95,10 +95,12 @@ public class VideoService {
 
 
     //7. Get videos by tagId with pagination
-    /*public PageImpl<VideoShortInfoDto> getVideosByTagId(Integer tagId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<VideoEntity> entityPage = videoRepository.findByTagId(tagId, pageable);
-    }*/
+//    public PageImpl<VideoShortInfoDto> getVideosByTagId(String tagId, int pageNumber, int pageSize) {
+//        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+//        Page<VideoShortInfoDto> vshidto = videoRepository.findAllByVideoTagId(tagId, pageable);
+//        List<VideoShortInfoDto> list = vshidto.getContent();
+//        return new PageImpl<>(list, pageable, vshidto.getTotalElements());
+//    }
 
 
     //

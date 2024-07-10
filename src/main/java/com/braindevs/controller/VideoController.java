@@ -24,12 +24,14 @@ public class VideoController {
 
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> create(@Valid @RequestBody VideoCreateDto videoCreateDto) {
         String response = videoService.create(videoCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("update/detail/{videoId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_USER')")
     public ResponseEntity<String> update(@PathVariable String videoId,
                                          @Valid @RequestBody VideoUpdateDto videoUpdateDto) {
         String response = videoService.update(videoUpdateDto, videoId);
@@ -38,6 +40,7 @@ public class VideoController {
 
 
     @PutMapping("update/status/{videoId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_USER')")
     public ResponseEntity<String> updateStatus(@PathVariable String videoId,
                                                @Valid @RequestParam VideoStatus videoStatus) {
         String response = videoService.updateStatus(videoId, videoStatus);
@@ -84,13 +87,13 @@ public class VideoController {
     }
 
 
-    @GetMapping("/byTagId{tagId}")
-    public ResponseEntity<PageImpl<VideoShortInfoDto>> getVideosByTagId(@PathVariable String tagId,
-                                                                        @RequestParam(value = "page", defaultValue = "1") int pageNumber,
-                                                                        @RequestParam(value = "size", defaultValue = "5") int pageSize) {
-        PageImpl<VideoShortInfoDto> response = videoService.getVideosByTitle(tagId, pageNumber - 1, pageSize);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @GetMapping("/byTagId{tagId}")
+//    public ResponseEntity<PageImpl<VideoShortInfoDto>> getVideosByTagId(@PathVariable String tagId,
+//                                                                        @RequestParam(value = "page", defaultValue = "1") int pageNumber,
+//                                                                        @RequestParam(value = "size", defaultValue = "5") int pageSize) {
+//        PageImpl<VideoShortInfoDto> response = videoService.getVideosByTagId(tagId, pageNumber - 1, pageSize);
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
 
 

@@ -25,7 +25,7 @@ public class VideoLikeEntity {
     private ProfileEntity profile;
 
     @Column(name = "video_id")
-    private Integer videoId;
+    private String  videoId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id", insertable = false, updatable = false)
     private VideoEntity video;
