@@ -6,13 +6,19 @@ import com.braindevs.dto.playList.PlayListCreateDto;
 import com.braindevs.dto.playList.PlayListDto;
 import com.braindevs.dto.playList.PlayListUpdateDto;
 import com.braindevs.dto.profile.ProfileDto;
+import com.braindevs.dto.video.VideoDto;
 import com.braindevs.entity.PlayListEntity;
 import com.braindevs.entity.ProfileEntity;
 import com.braindevs.enums.PlayListStatus;
 import com.braindevs.enums.ProfileRole;
 import com.braindevs.exp.AppBadException;
+import com.braindevs.mapper.PlayListMapper;
+import com.braindevs.mapper.PlaylistFullInfoMapper;
 import com.braindevs.repository.PlaylistRepository;
 import com.braindevs.util.SecurityUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -29,32 +36,40 @@ public class PlayListService {
     private final PlaylistRepository playlistRepository;
     private final AttachService attachService;
 
-    public PlayListDto create(PlayListCreateDto dto) {
-        PlayListEntity entity = toEntity(dto);
-        PlayListEntity saved = playlistRepository.save(entity);
-        return toDto(saved);
+    public long create(PlayListCreateDto dto) {
+        var entity = PlayListEntity.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .status(dto.getStatus())
+                .chanelId(dto.getChanelId())
+                .orderNumber(dto.getOrderNumber())
+                .build();
+
+        playlistRepository.save(entity);
+        return entity.getId();
     }
 
     public PlayListDto update(Long playlistId, PlayListUpdateDto dto) {
         isOwner(playlistId);
+        PlayListEntity entity = getById(playlistId);
+        entity.setName(dto.getName() == null ? entity.getName() : dto.getName());
+        entity.setDescription(dto.getDescription() == null ? entity.getDescription() : dto.getDescription());
+        entity.setOrderNumber(dto.getOrderNumber() == null ? entity.getOrderNumber() : dto.getOrderNumber());
+        playlistRepository.save(entity);
 
-        PlayListEntity playListEntity = getById(playlistId);
-        if (dto.getName() != null) {
-            playListEntity.setName(dto.getName());
-        }
-        if (dto.getDescription() != null) {
-            playListEntity.setDescription(dto.getDescription());
-        }
-
-        if (dto.getOrderNumber() != null) {
-            playListEntity.setOrderNumber(dto.getOrderNumber());
-        }
-        PlayListEntity saved = playlistRepository.save(playListEntity);
-        return toDto(saved);
+        return PlayListDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .orderNumber(entity.getOrderNumber())
+                .status(entity.getStatus())
+                .chanelId(entity.getChanelId())
+                .createdDate(entity.getCreatedDate())
+                .build();
     }
 
     public void updateStatus(Long playlistId, PlayListStatus status) {
-        isAdminOrOwner(playlistId);
+        isOwner(playlistId);
         playlistRepository.updateStatus(playlistId, status);
     }
 
@@ -65,7 +80,7 @@ public class PlayListService {
 
     public Page<PlayListDto> getAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<PlayListEntity> entityPage = playlistRepository.findAllBy(pageable);
+        Page<PlaylistFullInfoMapper> entityPage = playlistRepository.findAllBy(pageable);
         List<PlayListDto> list = entityPage.getContent()
                 .stream()
                 .map(this::toFullInfo)
@@ -81,91 +96,72 @@ public class PlayListService {
                 .toList();
     }
 
-    public List<PlayListDto> getByCurrentUserId() {
-        Long userId = SecurityUtil.getProfileId();
-        return playlistRepository.getByUserId(userId)
-                .stream()
-                .map(this::toShortInfo)
-                .toList();
-    }
-
     public List<PlayListDto> getByChanelId(String chanelId) {
-        return playlistRepository.findAllByChanelId(chanelId)
+        List<Object[]> resultList = playlistRepository.findAllByChanelId(chanelId);
+        return resultList
                 .stream()
-                .map(this::toShortInfo)
+                .map(objects -> {
+                    PlayListDto dto = new PlayListDto();
+                    dto.setId((Long) objects[0]);
+                    dto.setName((String) objects[1]);
+                    dto.setCreatedDate((LocalDateTime) objects[2]);
+                    dto.setVideoCount((Long) objects[5]);
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    List<VideoDto> videoList = null;
+                    try {
+                        videoList = objectMapper.readValue(objects[6].toString(), new TypeReference<List<VideoDto>>() {});
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    dto.setVideoList(videoList);
+
+                    // create chanel
+                    ChannelDto chanelDto = new ChannelDto();
+                    chanelDto.setId((String) objects[3]);
+                    chanelDto.setName((String) objects[4]);
+                    dto.setChanel(chanelDto);
+
+                    return dto;
+                })
                 .toList();
     }
 
-    public PlayListEntity getByPlaylistId(Long playlistId) {
-        return getById(playlistId);
+    public PlayListDto getByPlaylistId(Long playlistId) {
+        PlayListMapper mapper = playlistRepository.getById(playlistId);
+        return PlayListDto.builder()
+                .id(mapper.getId())
+                .name(mapper.getName())
+                .videoCount(mapper.getVideoCount())
+                .totalViewCount(mapper.getTotalViewCount())
+                .build();
     }
 
-    private PlayListDto toShortInfo(PlayListEntity entity) {
+    private PlayListDto toFullInfo(PlaylistFullInfoMapper entity) {
+        // create playlist
         PlayListDto dto = new PlayListDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
+        dto.setOrderNumber(entity.getOrderNumber());
+        dto.setStatus(entity.getStatus());
         dto.setCreatedDate(entity.getCreatedDate());
-        dto.setVideoCount(playlistRepository.videoCount());
-        ///////////// video list
 
         // create channel
         ChannelDto chanel = new ChannelDto();
         chanel.setId(entity.getChanelId());
-        chanel.setName(entity.getName());
+        chanel.setName(entity.getChanelName());
+        chanel.setPhotoId(entity.getChanelPhotoId());
         dto.setChanel(chanel);
-        return dto;
-    }
-
-    private PlayListDto toFullInfo(PlayListEntity entity) {
-        PlayListDto dto = new PlayListDto();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-        dto.setOrderNumber(entity.getOrderNumber());
-        dto.setStatus(entity.getStatus());
-        dto.setCreatedDate(entity.getCreatedDate());
-
-        // create channel
-        ChannelDto channel = new ChannelDto();
-        channel.setId(entity.getChanelId());
-        channel.setName(entity.getName());
-        // create chanel photo
-        AttachDto channelAttach = attachService.getDTOWithURL(entity.getChanel().getPhotoId());
-        channel.setPhoto(channelAttach);
-
-        dto.setChanel(channel);
 
         // create profile
         ProfileDto profile = new ProfileDto();
-        profile.setId(entity.getChanel().getProfileId());
-        profile.setName(entity.getChanel().getProfile().getName());
-        profile.setSurname(entity.getChanel().getProfile().getSurname());
-        // create profile photo
-        AttachDto profileAttach = attachService.getDTOWithURL(entity.getChanel().getProfile().getPhotoId());
-        profile.setAttach(profileAttach);
-
+        profile.setId(entity.getProfileId());
+        profile.setName(entity.getProfileName());
+        profile.setSurname(entity.getProfileSurname());
+        profile.setPhotoId(entity.getProfilePhotoId());
         dto.setProfile(profile);
-        return dto;
-    }
-
-    private PlayListEntity toEntity(PlayListCreateDto dto) {
-        PlayListEntity entity = new PlayListEntity();
-        entity.setName(dto.getName());
-        entity.setDescription(dto.getDescription());
-        entity.setStatus(dto.getStatus());
-        entity.setChanelId(dto.getChanelId());
-        entity.setOrderNumber(dto.getOrderNumber());
-        return entity;
-    }
-
-    private PlayListDto toDto(PlayListEntity entity) {
-        PlayListDto dto = new PlayListDto();
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-        dto.setStatus(entity.getStatus());
-        dto.setChanelId(entity.getChanelId());
-        dto.setOrderNumber(entity.getOrderNumber());
-        dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 

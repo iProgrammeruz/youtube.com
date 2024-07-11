@@ -19,7 +19,7 @@ public class ProfileDto {
     private String surname;
     private String email;
     private String password;
-    private String mainPhotoUrl;
+    private String photoId;
     private AttachDto attach;
     private LocalDateTime createdDate;
     private ProfileRole role;
