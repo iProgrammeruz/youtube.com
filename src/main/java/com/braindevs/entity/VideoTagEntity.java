@@ -1,13 +1,19 @@
 package com.braindevs.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "video_tag")
 public class VideoTagEntity {
@@ -24,7 +30,7 @@ public class VideoTagEntity {
     private VideoEntity video;
 
     @Column(name = "tag_id")
-    private Integer tagId;
+    private String tagId;
     @JoinColumn(name = "tag_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private TagEntity tag;

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 @Data
@@ -13,8 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "video")
 public class VideoEntity {
     @Id
-    @GeneratedValue(generator = "uuid-hibernate-generator")
-    @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
+    @UuidGenerator
     private String id;
 
     @Column(name = "preview_attach_id")
@@ -73,7 +73,5 @@ public class VideoEntity {
 
     @Column(name = "dislike_count")
     private Integer dislikeCount = 0;
-
-
 
 }
