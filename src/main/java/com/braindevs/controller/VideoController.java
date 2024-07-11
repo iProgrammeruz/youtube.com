@@ -1,4 +1,5 @@
 package com.braindevs.controller;
+
 import com.braindevs.dto.video.VideoCreateDto;
 import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.dto.video.VideoUpdateDto;
@@ -87,8 +88,8 @@ public class VideoController {
 
     @GetMapping("/byTagId{tagId}")
     public ResponseEntity<PageImpl<VideoShortInfoDto>> getVideosByTagId(@PathVariable String tagId,
-                                                                         @RequestParam(value = "page", defaultValue = "1") int pageNumber,
-                                                                         @RequestParam(value = "size", defaultValue = "5") int pageSize) {
+                                                                        @RequestParam(value = "page", defaultValue = "1") int pageNumber,
+                                                                        @RequestParam(value = "size", defaultValue = "5") int pageSize) {
         PageImpl<VideoShortInfoDto> response = videoService.getVideosByTagId(tagId, pageNumber - 1, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
