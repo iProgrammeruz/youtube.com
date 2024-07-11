@@ -1,8 +1,6 @@
 package com.braindevs.controller;
-
-
-import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.dto.video.VideoCreateDto;
+import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.dto.video.VideoUpdateDto;
 import com.braindevs.enums.VideoStatus;
 import com.braindevs.service.VideoService;
