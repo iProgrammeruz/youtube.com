@@ -1,7 +1,5 @@
 package com.braindevs.controller;
 
-
-import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.dto.video.VideoCreateDto;
 import com.braindevs.dto.video.VideoUpdateDto;
 import com.braindevs.enums.VideoStatus;
@@ -9,7 +7,6 @@ import com.braindevs.service.VideoService;
 import com.braindevs.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +28,7 @@ public class VideoController {
     }
 
     @PutMapping("update/detail/{videoId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_USER')")
     public ResponseEntity<String> update(@PathVariable String videoId,
                                          @Valid @RequestBody VideoUpdateDto videoUpdateDto) {
         String response = videoService.update(videoUpdateDto, videoId);

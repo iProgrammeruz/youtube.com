@@ -6,6 +6,7 @@ import com.braindevs.dto.playList.PlayListUpdateDto;
 import com.braindevs.entity.PlayListEntity;
 import com.braindevs.enums.PlayListStatus;
 import com.braindevs.service.PlayListService;
+import com.braindevs.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,8 +24,8 @@ public class PlayListController {
     private final PlayListService playListService;
 
     @PostMapping("/create")
-    public ResponseEntity<PlayListDto> create(@Valid @RequestBody PlayListCreateDto dto) {
-        PlayListDto response = playListService.create(dto);
+    public ResponseEntity<Long> create(@Valid @RequestBody PlayListCreateDto dto) {
+        long response = playListService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -63,7 +64,7 @@ public class PlayListController {
 
     @GetMapping("/currentUser")
     public ResponseEntity<List<PlayListDto>> getByCurrentUserId() {
-        List<PlayListDto> response = playListService.getByCurrentUserId();
+        List<PlayListDto> response = playListService.getByUserId(SecurityUtil.getProfileId());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -73,9 +74,9 @@ public class PlayListController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/byId")  ////////  MAZGI BU CHALA QOLDI
-    public ResponseEntity<PlayListEntity> getByPlaylistId(@RequestParam Long playlistId) {
-        PlayListEntity response = playListService.getByPlaylistId(playlistId);
+    @GetMapping("/byId")
+    public ResponseEntity<PlayListDto> getByPlaylistId(@RequestParam Long playlistId) {
+        PlayListDto response = playListService.getByPlaylistId(playlistId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

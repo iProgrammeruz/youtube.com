@@ -64,12 +64,18 @@ public class SecurityConfig {
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/webjars/**").permitAll()
                     .requestMatchers("/swagger-ui.html").permitAll()
+
+
                     .requestMatchers("/category/admin/**").hasRole("ADMIN")
                     .requestMatchers("/tag/admin/**").hasRole("ADMIN")
                     .requestMatchers("/category/getCategoryList").permitAll()
                     .requestMatchers("/tag/create").permitAll()
                     .requestMatchers("/tag/getTagList").permitAll()
                     .requestMatchers("/playlist/**").permitAll()
+                    .requestMatchers("/playlist_video/**").permitAll()
+                    .requestMatchers("/video_tag/**").permitAll()
+                    .requestMatchers("/comment/**").permitAll()
+                    .requestMatchers("/comment_like/**").permitAll()
                     .requestMatchers("/profile/admin/**").hasRole("ADMIN")
                     .requestMatchers("/chanel/v1/**").hasRole("USER")
                     .requestMatchers("/chanel/getAll").hasRole("ADMIN")

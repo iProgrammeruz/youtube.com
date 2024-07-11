@@ -2,12 +2,14 @@ package com.braindevs.entity;
 
 import com.braindevs.enums.PlayListStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "playlist")
 public class PlayListEntity {
