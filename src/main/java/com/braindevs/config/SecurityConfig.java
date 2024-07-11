@@ -74,6 +74,7 @@ public class SecurityConfig {
                     .requestMatchers("/playlist/**").permitAll()
                     .requestMatchers("/playlist_video/**").permitAll()
                     .requestMatchers("/video_tag/**").permitAll()
+                    .requestMatchers("/comment/**").permitAll()
                     .requestMatchers("/profile/admin/**").hasRole("ADMIN")
                     .requestMatchers("/chanel/v1/**").hasRole("USER")
                     .requestMatchers("/chanel/getAll").hasRole("ADMIN")
