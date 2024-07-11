@@ -1,8 +1,8 @@
 package com.braindevs.controller;
 
-import com.braindevs.dto.video.VideoCreateDto;
-import com.braindevs.dto.video.VideoDto;
+
 import com.braindevs.dto.video.VideoShortInfoDto;
+import com.braindevs.dto.video.VideoCreateDto;
 import com.braindevs.dto.video.VideoUpdateDto;
 import com.braindevs.enums.VideoStatus;
 import com.braindevs.service.VideoService;
@@ -31,7 +31,7 @@ public class VideoController {
     }
 
     @PutMapping("update/detail/{videoId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN,ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_USER')")
     public ResponseEntity<String> update(@PathVariable String videoId,
                                          @Valid @RequestBody VideoUpdateDto videoUpdateDto) {
         String response = videoService.update(videoUpdateDto, videoId);
@@ -87,13 +87,13 @@ public class VideoController {
     }
 
 
-//    @GetMapping("/byTagId{tagId}")
-//    public ResponseEntity<PageImpl<VideoShortInfoDto>> getVideosByTagId(@PathVariable String tagId,
-//                                                                        @RequestParam(value = "page", defaultValue = "1") int pageNumber,
-//                                                                        @RequestParam(value = "size", defaultValue = "5") int pageSize) {
-//        PageImpl<VideoShortInfoDto> response = videoService.getVideosByTagId(tagId, pageNumber - 1, pageSize);
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
+    @GetMapping("/byTagId{tagId}")
+    public ResponseEntity<PageImpl<VideoShortInfoDto>> getVideosByTagId(@PathVariable String tagId,
+                                                                         @RequestParam(value = "page", defaultValue = "1") int pageNumber,
+                                                                         @RequestParam(value = "size", defaultValue = "5") int pageSize) {
+        PageImpl<VideoShortInfoDto> response = videoService.getVideosByTagId(tagId, pageNumber - 1, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 
 

@@ -2,6 +2,7 @@ package com.braindevs.service;
 
 import com.braindevs.dto.channel.ChannelCreateDto;
 import com.braindevs.dto.channel.ChannelDto;
+import com.braindevs.dto.channel.ChannelShortInfoDto;
 import com.braindevs.dto.channel.ChannelUpdateDto;
 import com.braindevs.entity.ChannelEntity;
 import com.braindevs.entity.ProfileEntity;
@@ -96,6 +97,11 @@ public class ChannelService {
     public ChannelDto getChanelById(String chanelId) {
         ChannelEntity entity = get(chanelId);
         return toDto(entity);
+    }
+
+    public ChannelShortInfoDto getChanelByIdShort(String chanelId) {
+        ChannelEntity entity = get(chanelId);
+        return new ChannelShortInfoDto(entity.getId(), entity.getName(), entity.getPhotoId());
     }
 
     private ChannelEntity toEntity(ChannelCreateDto dto) {

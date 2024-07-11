@@ -1,6 +1,4 @@
 package com.braindevs.repository;
-
-import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.entity.VideoEntity;
 import com.braindevs.enums.VideoStatus;
 import jakarta.transaction.Transactional;
@@ -10,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
 
 public interface VideoRepository extends CrudRepository<VideoEntity, String>,
         PagingAndSortingRepository<VideoEntity, String> {
@@ -26,30 +25,39 @@ public interface VideoRepository extends CrudRepository<VideoEntity, String>,
     Page<VideoEntity> findAllByTitle(String title, Pageable pageable);
 
 
-    //@Query( " SELECT v.id, v.title, v.previewAttachId, v.publishedDate, v.viewCount, ch.id, ch.name" +
-    ////            " FROM VideoEntity AS v " +
-    ////            " INNER JOIN v.chanel AS ch " +
-    ////            " WHERE v. = ?1 ")
-    ////    Page<VideoShortInfoMapper> findByTagId(String title, Pageable pageable);
+  /*  @Query(value = "SELECT " +
+            "v.id," +
+            "v.title, " +
+            "v.previewAttachId as photoId, " +
+            "json_build_object(" +
+            "'id', c.id, " +
+            "'name', c.name," +
+            "'photoId',c.photoId" +
+            ") as channel," +
+            "v.publishedDate," +
+            "v.viewCount " +
+            "from VideoEntity as v " +
+            "inner join AttachEntity as a on a.id = VideoEntity .attachId " +
+            "inner join ChannelEntity as c on c.id = v.channelId " +
+            "inner join VideoTagEntity as vt on vt.id = v.id " +
+            "where vt.tagId = :tagId ")
+    Page<VideoShortInfoDto> findAllByVideoTagId(String tagId, Pageable pageable);*/
 
-
-//    @Query(value = "SELECT " +
-//            "v.id," +
-//            "v.title, " +
-//            "v.previewAttachId as photoId, " +
-//            "json_build_object(" +
-//            "'id', c.id, " +
-//            "'name', c.name," +
-//            "'photoId',c.photoId" +
-//            ") as channel," +
-//            "v.publishedDate," +
-//            "v.viewCount " +
-//            "from VideoEntity as v " +
-//            "inner join AttachEntity as a on a.id = VideoEntity .attachId " +
-//            "inner join ChannelEntity as c on c.id = v.channelId " +
-//            "inner join VideoTagEntity as vt on vt.id = v.id " +
-//            "where vt.tagId = :tagId ")
-//    Page<VideoShortInfoDto> findAllByVideoTagId(String tagId, Pageable pageable);
+  @Query("select " +
+          "v.id," +
+          "v.title, " +
+          "v.previewAttachId , " +
+          "v.publishedDate," +
+          "v.viewCount," +
+          "c.id ," +
+          "c.name ," +
+          "c.photoId " +
+          "from VideoEntity as v " +
+          "inner join AttachEntity as a on a.id = VideoEntity .attachId " +
+          "inner join ChannelEntity as c on c.id = v.channelId " +
+          "inner join VideoTagEntity as vt on vt.id = v.id " +
+          "where vt.tagId = ?1 ")
+  Page<Object[]> findAllByVideoTagId(String tagId, Pageable pageable);
 
 
     @Transactional
