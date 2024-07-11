@@ -167,18 +167,6 @@ public class VideoService {
     }
 
 
-
-
-
-   /* private void isAdminOrOwner(String videoId) {
-        ProfileEntity profile = SecurityUtil.getProfile();
-        PlayListEntity playListEntity = getById(playlistId);
-        if (!playListEntity.getChanel().getProfileId().equals(profile.getId())
-                || !profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
-            throw new AppBadException("You dont have permission to delete this playlist");
-        }
-    }*/
-
     private void isOwner(String videoId) {
         Long profileId = SecurityUtil.getProfileId();
         VideoEntity videoEntity = get(videoId);
