@@ -1,6 +1,6 @@
 package com.braindevs.controller;
 
-import com.braindevs.dto.AttachDto;
+import com.braindevs.dto.attach.AttachDto;
 import com.braindevs.service.AttachService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

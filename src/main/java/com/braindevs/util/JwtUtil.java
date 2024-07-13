@@ -23,7 +23,7 @@ public class JwtUtil {
                 .claim("username", username)
                 .claim("role", role)
                 .expiration(new Date(System.currentTimeMillis() + tokenLiveTime))
-                .issuer("KunUz")
+                .issuer("BrainDevs")
                 .compact();
         return token;
     }

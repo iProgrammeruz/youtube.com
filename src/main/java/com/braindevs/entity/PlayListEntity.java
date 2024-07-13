@@ -2,12 +2,14 @@ package com.braindevs.entity;
 
 import com.braindevs.enums.PlayListStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "playlist")
 public class PlayListEntity {
@@ -19,7 +21,7 @@ public class PlayListEntity {
     private String chanelId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chanel_id", insertable = false, updatable = false)
-    private ChanelEntity chanel;
+    private ChannelEntity chanel;
 
     @Column(name = "name")
     private String name;

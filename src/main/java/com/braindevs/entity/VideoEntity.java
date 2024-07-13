@@ -1,19 +1,15 @@
 package com.braindevs.entity;
 
 import com.braindevs.enums.VideoStatus;
-import com.braindevs.enums.VidoeType;
+import com.braindevs.enums.VideoType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "video")
 public class VideoEntity {
@@ -27,9 +23,6 @@ public class VideoEntity {
     @JoinColumn(name = "preview_attach_id", insertable = false, updatable = false)
     private AttachEntity previewAttach;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "attach_id")
     private String attachId;
     @OneToOne(fetch = FetchType.LAZY)
@@ -42,8 +35,12 @@ public class VideoEntity {
     @JoinColumn(name = "category_id", insertable = false, updatable = false)
     private CategoryEntity category;
 
+    @Column(name = "title")
+    private String title;
+
+    @CreationTimestamp
     @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private LocalDateTime createdDate;
 
     @Column(name = "published_date")
     private LocalDateTime publishedDate;
@@ -54,28 +51,27 @@ public class VideoEntity {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private VidoeType type;
+    private VideoType type;
 
     @Column(name = "view_count")
-    private Integer viewCount = 0;
+    private Integer viewCount; //TODO trigger at view_count entity
 
     @Column(name = "shared_count")
     private Integer sharedCount = 0;
 
+    @Column(name = "description", columnDefinition = "text")
+    private String description;
+
+    @Column(name = "channel_id")
+    private String channelId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id", insertable = false, updatable = false)
+    private ChannelEntity channel;
+
     @Column(name = "like_count")
-    private Integer likeCount = 0;
+    private Integer likeCount = 0; //TODO trigger at video_like entity
 
     @Column(name = "dislike_count")
     private Integer dislikeCount = 0;
 
-    @Column(name = "description")
-    private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chanel_id", insertable = false, updatable = false)
-    private ChanelEntity chanel;
-    @Column(name = "chanel_id")
-    private String chanelId;
-
-//    private List<Integer> tagList;
 }

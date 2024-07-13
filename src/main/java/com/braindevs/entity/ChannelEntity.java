@@ -1,13 +1,10 @@
 package com.braindevs.entity;
 
-
 import com.braindevs.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,35 +17,33 @@ public class ChannelEntity {
     private String id;
 
     @Column(name = "name")
-    private String name ;
+    private String name;
 
-    @Column(name = "attach_id")
-    private String attachId;
-    @OneToOne()
-    @JoinColumn(name = "attach_id" ,insertable = false,updatable = false)
-    private AttachEntity attach;
-
-    @Column(name = "description" , columnDefinition = "text")
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Column(name = "banner_id")
     private String bannerId;
-    @OneToOne()
-    @JoinColumn(name = "banner_id" ,insertable = false,updatable = false)
+    @OneToOne
+    @JoinColumn(name = "banner_id", insertable = false, updatable = false)
     private AttachEntity banner;
 
-    @Column(name = "owner_id")
-    private Long ownerId ;
+    @Column(name = "photo_id")
+    private String photoId;
+    @OneToOne
+    @JoinColumn(name = "photo_id", insertable = false, updatable = false)
+    private AttachEntity photo;
+
+    @Column(name = "profile_id")
+    private Long profileId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id",insertable = false, updatable = false)
-    private ProfileEntity owner;
+    @JoinColumn(name = "profile_id",insertable=false, updatable=false)
+    private ProfileEntity profile;
 
-
-    @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
-
+    @Column(name = "created")
+    private LocalDateTime created = LocalDateTime.now();
 }

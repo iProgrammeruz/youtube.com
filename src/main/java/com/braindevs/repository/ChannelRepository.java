@@ -8,21 +8,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-
-import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 
-public interface ChannelRepository extends CrudRepository<ChannelEntity, String> {
 
-    Optional<ChannelEntity> findByName(String name);
-    Optional<ChannelEntity> findByOwnerIdAndId(Long owner ,String channelId);
-
-    Page<ChannelEntity> findAll(Pageable pageable);
+public interface ChannelRepository extends CrudRepository<ChannelEntity,String> {
+    @Transactional
+    @Modifying
+    @Query("update ChannelEntity set photoId = ?1 where id = ?2")
+    void updatePhotoId(String photoId ,String chanelId);
 
     @Transactional
     @Modifying
-    @Query("update ChannelEntity set status =?2 where id = ?1")
-    void updateStatus(String channelId, Status status);
+    @Query("update ChannelEntity set bannerId = ?1 where id = ?2")
+    void updateBannerId(String bannerId ,String chanelId);
 
-    Page<ChannelEntity> findAllByOwnerId(Long ownerId, Pageable pageable);
+    @Transactional
+    @Modifying
+    @Query("update ChannelEntity set status = ?1 where id = ?2")
+    void updateStatus(Status status , String chanelId);
+
+    Page<ChannelEntity> findAllBy(Pageable pageable);
+
+    List<ChannelEntity> findAllByProfileId(Long profileId);
+
+    Optional<ChannelEntity> findByProfileId(Long profileId);
+
 }
