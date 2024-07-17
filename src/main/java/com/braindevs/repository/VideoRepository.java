@@ -1,4 +1,5 @@
 package com.braindevs.repository;
+
 import com.braindevs.entity.VideoEntity;
 import com.braindevs.enums.VideoStatus;
 import jakarta.transaction.Transactional;
@@ -19,45 +20,26 @@ public interface VideoRepository extends CrudRepository<VideoEntity, String>,
     void updateStatus(String videoId, VideoStatus videoStatus);
 
 
-    Page<VideoEntity> findAllByCategoryId(Integer  categoryId, Pageable pageable);
+    Page<VideoEntity> findAllByCategoryId(Integer categoryId, Pageable pageable);
 
 
     Page<VideoEntity> findAllByTitle(String title, Pageable pageable);
 
-
-  /*  @Query(value = "SELECT " +
+    @Query("select " +
             "v.id," +
             "v.title, " +
-            "v.previewAttachId as photoId, " +
-            "json_build_object(" +
-            "'id', c.id, " +
-            "'name', c.name," +
-            "'photoId',c.photoId" +
-            ") as channel," +
+            "v.previewAttachId , " +
             "v.publishedDate," +
-            "v.viewCount " +
+            "v.viewCount," +
+            "c.id ," +
+            "c.name ," +
+            "c.photoId " +
             "from VideoEntity as v " +
-            "inner join AttachEntity as a on a.id = VideoEntity .attachId " +
-            "inner join ChannelEntity as c on c.id = v.channelId " +
+            "inner join v.attach  as a " +
+            "inner join v.channel  as c " +
             "inner join VideoTagEntity as vt on vt.id = v.id " +
-            "where vt.tagId = :tagId ")
-    Page<VideoShortInfoDto> findAllByVideoTagId(String tagId, Pageable pageable);*/
-
-  @Query("select " +
-          "v.id," +
-          "v.title, " +
-          "v.previewAttachId , " +
-          "v.publishedDate," +
-          "v.viewCount," +
-          "c.id ," +
-          "c.name ," +
-          "c.photoId " +
-          "from VideoEntity as v " +
-          "inner join AttachEntity as a on a.id = VideoEntity .attachId " +
-          "inner join ChannelEntity as c on c.id = v.channelId " +
-          "inner join VideoTagEntity as vt on vt.id = v.id " +
-          "where vt.tagId = ?1 ")
-  Page<Object[]> findAllByVideoTagId(String tagId, Pageable pageable);
+            "where vt.tagId = ?1 ")
+    Page<Object[]> findAllByVideoTagId(String tagId, Pageable pageable);
 
 
     @Transactional
