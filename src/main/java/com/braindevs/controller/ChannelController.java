@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/channel")
 @RequiredArgsConstructor
 public class ChannelController {
+
     private final ChannelService channelService;
 
     @PostMapping("/v1/create")

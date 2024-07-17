@@ -1,13 +1,16 @@
 package com.braindevs.service;
 
+import com.braindevs.dto.video.VideoShortInfoDto;
+import com.braindevs.dto.channel.ChannelShortInfoDto;
+
 import com.braindevs.dto.video.VideoCreateDto;
 import com.braindevs.dto.video.VideoDto;
-import com.braindevs.dto.video.VideoShortInfoDto;
 import com.braindevs.dto.video.VideoUpdateDto;
 import com.braindevs.entity.VideoEntity;
 import com.braindevs.enums.VideoStatus;
 import com.braindevs.exp.AppBadException;
 import com.braindevs.repository.VideoRepository;
+import com.braindevs.util.MapperUtil;
 import com.braindevs.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -78,7 +81,7 @@ public class VideoService {
                 .stream()
                 .map(this::toDtoShortInfo)
                 .toList();
-      return new PageImpl<>(shortInfoDtoList, pageable, entityPage.getTotalElements());
+        return new PageImpl<>(shortInfoDtoList, pageable, entityPage.getTotalElements());
     }
 
 
@@ -95,12 +98,25 @@ public class VideoService {
 
 
     //7. Get videos by tagId with pagination
-//    public PageImpl<VideoShortInfoDto> getVideosByTagId(String tagId, int pageNumber, int pageSize) {
-//        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-//        Page<VideoShortInfoDto> vshidto = videoRepository.findAllByVideoTagId(tagId, pageable);
-//        List<VideoShortInfoDto> list = vshidto.getContent();
-//        return new PageImpl<>(list, pageable, vshidto.getTotalElements());
-//    }
+    public PageImpl<VideoShortInfoDto> getVideosByTagId(String tagId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Object[]> vshidto = videoRepository.findAllByVideoTagId(tagId, pageable);
+        List<VideoShortInfoDto> shortInfoDtoList = new ArrayList<>();
+        for (Object[] objects : vshidto) {
+            VideoShortInfoDto dto = new VideoShortInfoDto();
+            dto.setId(MapperUtil.getStringValue(objects[0]));
+            dto.setTitle(MapperUtil.getStringValue(objects[1]));
+            dto.setPreviewAttach(attachService.toDto(MapperUtil.getStringValue(objects[2])));
+            dto.setViewCount(MapperUtil.getIntegerValue(objects[3]));
+            dto.setChannel(new ChannelShortInfoDto(
+                    MapperUtil.getStringValue(objects[4]),
+                    MapperUtil.getStringValue(objects[5]),
+                    attachService.asUrlString(MapperUtil.getStringValue(objects[6]))));
+            shortInfoDtoList.add(dto);
+
+        }
+        return new PageImpl<>(shortInfoDtoList, pageable, vshidto.getTotalElements());
+    }
 
 
     //
@@ -124,13 +140,13 @@ public class VideoService {
 
 
     //Video short info
-    public VideoShortInfoDto toDtoShortInfo(VideoEntity entity){
+    public VideoShortInfoDto toDtoShortInfo(VideoEntity entity) {
         VideoShortInfoDto vshid = new VideoShortInfoDto();
         vshid.setId(entity.getId());
         vshid.setTitle(entity.getTitle());
         vshid.setPreviewAttach(attachService.toDto(entity.getPreviewAttachId()));
         vshid.setPublishedDate(entity.getPublishedDate());
-        vshid.setChannel(channelService.getChanelById(entity.getChannelId()));
+        vshid.setChannel(channelService.getChanelByIdShort(entity.getChannelId()));
         vshid.setViewCount(entity.getViewCount());
         return vshid;
     }
@@ -150,18 +166,6 @@ public class VideoService {
         return dto;
     }
 
-
-
-
-
-   /* private void isAdminOrOwner(String videoId) {
-        ProfileEntity profile = SecurityUtil.getProfile();
-        PlayListEntity playListEntity = getById(playlistId);
-        if (!playListEntity.getChanel().getProfileId().equals(profile.getId())
-                || !profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
-            throw new AppBadException("You dont have permission to delete this playlist");
-        }
-    }*/
 
     private void isOwner(String videoId) {
         Long profileId = SecurityUtil.getProfileId();
